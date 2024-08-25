@@ -1,0 +1,76 @@
+/* Estilos Generales */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1em;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.ticket {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+}
+
+.scanner {
+    margin-bottom: 20px;
+}
+
+video {
+    width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Estilos Responsivos */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    button {
+        font-size: 0.9em;
+    }
+
+    input[type="text"] {
+        font-size: 0.9em;
+    }
+}
