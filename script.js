@@ -1,8 +1,18 @@
-// Lista simple de productos
+// Lista de productos con sus precios
 const productos = {
     "1": { nombre: "Sabritas", precio: 15.0 },
-    "2": { nombre: "Mazapan chico", precio: 1.50 },
-    "3": { nombre: "Mazapan chocolate", precio: 06.0 }
+    "2": { nombre: "Mazapan chocolate", precio: 10.0 },
+    "3": { nombre: "Mazapan chico", precio: 5.0 },
+    "4": { nombre: "Mazapan original", precio: 8.0 },
+    "5": { nombre: "Borrachitos", precio: 12.0 },
+    "6": { nombre: "Bombones", precio: 10.0 },
+    "7": { nombre: "Chicles", precio: 3.0 },
+    "8": { nombre: "Tamarroca", precio: 7.0 },
+    "9": { nombre: "Gomitas", precio: 10.0 },
+    "10": { nombre: "Pepitas", precio: 12.0 },
+    "11": { nombre: "Cacahuates", precio: 15.0 },
+    "12": { nombre: "Obleas", precio: 10.0 },
+    "13": { nombre: "Bon o Bon", precio: 5.0 }
 };
 
 // Lista para guardar los productos agregados al ticket
@@ -12,11 +22,10 @@ let ticket = [];
 function agregarProducto() {
     const select = document.getElementById('producto-select');
     const codigo = select.value;
-    const producto = productos[codigo];
 
-    if (producto) {
+    if (codigo) {
+        const producto = productos[codigo];
         ticket.push(producto);
-        select.value = ""; // Reiniciar selección
         generarTicket();
     } else {
         alert("Seleccione un producto válido");
@@ -28,8 +37,8 @@ function generarTicket() {
     let total = 0;
     let ticketHtml = '<h2>Ticket</h2><ul>';
 
-    ticket.forEach(item => {
-        ticketHtml += `<li>${item.nombre} - $${item.precio.toFixed(2)}</li>`;
+    ticket.forEach((item, index) => {
+        ticketHtml += `<li>${index + 1}. ${item.nombre} - $${item.precio.toFixed(2)}</li>`;
         total += item.precio;
     });
 
