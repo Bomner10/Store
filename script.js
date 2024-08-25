@@ -10,15 +10,16 @@ let ticket = [];
 
 // Función para agregar un producto al ticket
 function agregarProducto() {
-    const codigo = document.getElementById('codigo').value.trim();
+    const select = document.getElementById('producto-select');
+    const codigo = select.value;
     const producto = productos[codigo];
 
     if (producto) {
         ticket.push(producto);
-        document.getElementById('codigo').value = "";
+        select.value = ""; // Reiniciar selección
         generarTicket();
     } else {
-        alert("Producto no encontrado");
+        alert("Seleccione un producto válido");
     }
 }
 
@@ -35,48 +36,6 @@ function generarTicket() {
     ticketHtml += `</ul><h3>Total: $${total.toFixed(2)}</h3>`;
 
     document.getElementById('ticket').innerHTML = ticketHtml;
-}
-
-// Funcionalidad de escaneo de código de barras con QuaggaJS
-document.getElementById('start-button').addEventListener('click', function() {
-    Quagga.init({
-        inputStream: {
-            name: "Live",
-            type: "LiveStream",
-            target: document.querySelector('#video')
-        },
-        decoder: {
-            readers: ["ean_reader", "ean_8_reader", "code_128_reader", "code_39_reader"]
-        }
-    }, function(err) {
-        if (err) {
-            console.error(err);
-            alert("Error al iniciar el escáner");
-            return;
-        }
-        Quagga.start();
-        document.getElementById('start-button').disabled = true;
-        document.getElementById('stop-button').disabled = false;
-    });
-
-    Quagga.onDetected(onDetected);
-});
-
-document.getElementById('stop-button').addEventListener('click', function() {
-    Quagga.stop();
-    document.getElementById('start-button').disabled = false;
-    document.getElementById('stop-button').disabled = true;
-});
-
-// Función llamada cuando se detecta un código de barras
-function onDetected(result) {
-    const codigo = result.codeResult.code;
-    document.getElementById('codigo').value = codigo;
-    agregarProducto();
-    Quagga.offDetected(onDetected);
-    Quagga.stop();
-    document.getElementById('start-button').disabled = false;
-    document.getElementById('stop-button').disabled = true;
 }
 
 // PWA: Registrar Service Worker
