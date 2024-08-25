@@ -7,8 +7,7 @@ const urlsToCache = [
     '/manifest.json',
     '/service-worker.js',
     '/icons/icon-192x192.png',
-    '/icons/icon-512x512.png',
-    'https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js'
+    '/icons/icon-512x512.png'
 ];
 
 self.addEventListener('install', (event) => {
