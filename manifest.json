@@ -1,18 +1,19 @@
 {
     "name": "Sistema de Venta Simple",
-    "short_name": "Venta",
-    "start_url": ".",
+    "short_name": "Venta Simple",
+    "description": "Una aplicación simple para gestionar ventas",
+    "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#007BFF",
+    "background_color": "#f5f5f5",
+    "theme_color": "#4CAF50",
     "icons": [
         {
-            "src": "icons/icon-192x192.png",
+            "src": "icon-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "icons/icon-512x512.png",
+            "src": "icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
