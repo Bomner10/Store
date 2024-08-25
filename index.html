@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Venta Simple</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Manifest para PWA -->
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Venta Simple</h1>
+        
+        <!-- Sección de Escaneo de Códigos de Barras -->
+        <div class="scanner">
+            <video id="video" width="100%" height="auto" autoplay></video>
+            <button id="start-button">Iniciar Escaneo</button>
+            <button id="stop-button" disabled>Detener Escaneo</button>
+        </div>
+
+        <!-- Entrada Manual de Código de Producto -->
+        <input type="text" id="codigo" placeholder="Escanea o ingresa el código del producto">
+        <button onclick="agregarProducto()">Agregar Producto</button>
+
+        <!-- Sección de Ticket -->
+        <div id="ticket" class="ticket"></div>
+    </div>
+
+    <!-- Inclusión de QuaggaJS desde CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
