@@ -20,15 +20,14 @@ let ticket = [];
 
 // Función para agregar un producto al ticket
 function agregarProducto() {
-    const select = document.getElementById('producto-select');
-    const codigo = select.value;
+    const codigo = document.getElementById('producto-codigo').value;
 
-    if (codigo) {
+    if (productos[codigo]) {
         const producto = productos[codigo];
         ticket.push(producto);
         generarTicket();
     } else {
-        alert("Seleccione un producto válido");
+        alert("Ingrese un código de producto válido.");
     }
 }
 
