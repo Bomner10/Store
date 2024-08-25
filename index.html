@@ -12,23 +12,19 @@
     <div class="container">
         <h1>Sistema de Venta Simple</h1>
         
-        <!-- Sección de Escaneo de Códigos de Barras -->
-        <div class="scanner">
-            <video id="video" width="100%" height="auto" autoplay></video>
-            <button id="start-button">Iniciar Escaneo</button>
-            <button id="stop-button" disabled>Detener Escaneo</button>
-        </div>
-
-        <!-- Entrada Manual de Código de Producto -->
-        <input type="text" id="codigo" placeholder="Escanea o ingresa el código del producto">
+        <!-- Selección de Producto -->
+        <select id="producto-select">
+            <option value="">Seleccione un producto</option>
+            <option value="12345">Producto A - $10.00</option>
+            <option value="67890">Producto B - $20.00</option>
+            <option value="11223">Producto C - $30.00</option>
+        </select>
         <button onclick="agregarProducto()">Agregar Producto</button>
 
         <!-- Sección de Ticket -->
         <div id="ticket" class="ticket"></div>
     </div>
 
-    <!-- Inclusión de QuaggaJS desde CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
