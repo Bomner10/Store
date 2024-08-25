@@ -19,7 +19,7 @@ h1 {
     color: #333;
 }
 
-input[type="text"] {
+select, button {
     padding: 10px;
     width: 100%;
     margin-bottom: 10px;
@@ -28,14 +28,10 @@ input[type="text"] {
 }
 
 button {
-    padding: 10px;
     background-color: #007BFF;
     color: white;
     border: none;
-    width: 100%;
     cursor: pointer;
-    font-size: 1em;
-    margin-bottom: 10px;
     border-radius: 5px;
 }
 
@@ -49,28 +45,13 @@ button:hover {
     padding-top: 20px;
 }
 
-.scanner {
-    margin-bottom: 20px;
-}
-
-video {
-    width: 100%;
-    height: auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
 /* Estilos Responsivos */
 @media (max-width: 600px) {
     h1 {
         font-size: 1.5em;
     }
 
-    button {
-        font-size: 0.9em;
-    }
-
-    input[type="text"] {
+    button, select {
         font-size: 0.9em;
     }
 }
