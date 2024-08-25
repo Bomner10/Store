@@ -1,8 +1,8 @@
 // Lista simple de productos
 const productos = {
-    "12345": { nombre: "Producto A", precio: 10.0 },
-    "67890": { nombre: "Producto B", precio: 20.0 },
-    "11223": { nombre: "Producto C", precio: 30.0 }
+    "1": { nombre: "Sabritas", precio: 15.0 },
+    "2": { nombre: "Mazapan chico", precio: 1.50 },
+    "3": { nombre: "Mazapan chocolate", precio: 06.0 }
 };
 
 // Lista para guardar los productos agregados al ticket
