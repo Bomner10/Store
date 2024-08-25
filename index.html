@@ -4,12 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Venta Simple</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
+    <style>
+        /* Estilos básicos para la aplicación de venta simple */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .productos {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .productos ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .productos li {
+            margin-bottom: 10px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .ticket {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .ticket h2 {
+            margin-bottom: 10px;
+        }
+
+        .ticket ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .ticket li {
+            margin-bottom: 5px;
+        }
+
+        .ticket h3 {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Sistema de Venta Simple</h1>
+
+        <!-- Sección de Productos -->
+        <div class="productos">
+            <h2>Productos Disponibles</h2>
+            <ul id="productos-lista"></ul>
+        </div>
 
         <!-- Ingreso de Código del Producto -->
         <input type="number" id="producto-codigo" placeholder="Código del producto">
@@ -19,6 +110,70 @@
         <div id="ticket" class="ticket"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Lista de productos con sus precios
+        const productos = {
+            "1": { nombre: "Sabritas", precio: 15.0 },
+            "2": { nombre: "Mazapan chocolate", precio: 10.0 },
+            "3": { nombre: "Mazapan chico", precio: 5.0 },
+            "4": { nombre: "Mazapan original", precio: 8.0 },
+            "5": { nombre: "Borrachitos", precio: 12.0 },
+            "6": { nombre: "Bombones", precio: 10.0 },
+            "7": { nombre: "Chicles", precio: 3.0 },
+            "8": { nombre: "Tamarroca", precio: 7.0 },
+            "9": { nombre: "Gomitas", precio: 10.0 },
+            "10": { nombre: "Pepitas", precio: 12.0 },
+            "11": { nombre: "Cacahuates", precio: 15.0 },
+            "12": { nombre: "Obleas", precio: 10.0 },
+            "13": { nombre: "Bon o Bon", precio: 5.0 }
+        };
+
+        // Lista para guardar los productos agregados al ticket
+        let ticket = [];
+
+        // Función para mostrar los productos disponibles
+        function mostrarProductos() {
+            const productosLista = document.getElementById('productos-lista');
+            productosLista.innerHTML = '';
+
+            for (const [codigo, producto] of Object.entries(productos)) {
+                productosLista.innerHTML += `<li><strong>${codigo}:</strong> ${producto.nombre} - $${producto.precio.toFixed(2)}</li>`;
+            }
+        }
+
+        // Función para agregar un producto al ticket
+        function agregarProducto() {
+            const codigo = document.getElementById('producto-codigo').value;
+
+            if (productos[codigo]) {
+                const producto = productos[codigo];
+                ticket.push(producto);
+                generarTicket();
+            } else {
+                alert("Ingrese un código de producto válido.");
+            }
+        }
+
+        // Función para generar el ticket
+        function generarTicket() {
+            let total = 0;
+            let ticketHtml = '<h2>Ticket</h2><ul>';
+
+            ticket.forEach((item, index) => {
+                ticketHtml += `<li>${index + 1}. ${item.nombre} - $${item.precio.toFixed(2)}</li>`;
+                total += item.precio;
+            });
+
+            ticketHtml += `</ul><h3>Total: $${total.toFixed(2)}</h3>`;
+
+            document.getElementById('ticket').innerHTML = ticketHtml;
+        }
+
+        // Vincula el botón de agregar producto al evento de clic
+        document.getElementById('agregar-producto-btn').addEventListener('click', agregarProducto);
+
+        // Muestra la lista de productos al cargar la página
+        mostrarProductos();
+    </script>
 </body>
 </html>
