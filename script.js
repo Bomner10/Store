@@ -47,13 +47,5 @@ function generarTicket() {
     document.getElementById('ticket').innerHTML = ticketHtml;
 }
 
-// PWA: Registrar Service Worker
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js').then((registration) => {
-            console.log('Service Worker registrado con éxito:', registration);
-        }, (error) => {
-            console.log('Service Worker no registrado:', error);
-        });
-    });
-}
+// Vincula el botón de agregar producto al evento de clic
+document.getElementById('agregar-producto-btn').addEventListener('click', agregarProducto);
