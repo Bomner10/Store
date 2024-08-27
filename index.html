@@ -170,6 +170,64 @@
         });
         document.getElementById('guardar-producto-btn').addEventListener('click', agregarProducto);
         document.getElementById('generar-ticket-btn').addEventListener('click', generarTicket);
+        <div id="compra-container" style="display: none;">
+    <h2>Compra</h2>
+    <h3>Productos Disponibles</h3>
+    <ul id="productos-disponibles-lista"></ul>
+    <input type="number" id="codigo-compra" placeholder="Código del producto">
+    <input type="number" id="cantidad-compra" placeholder="Cantidad">
+    <button id="generar-ticket-btn">Generar Ticket</button>
+    <div id="ticket-container"></div>
+    <button id="guardar-pdf-btn">Guardar como PDF</button>
+</div>
+
+// ...
+
+// Función para mostrar productos disponibles
+function mostrarProductosDisponibles() {
+    const productosDisponiblesLista = document.getElementById('productos-disponibles-lista');
+    productosDisponiblesLista.innerHTML = '';
+    productos.forEach((producto) => {
+        productosDisponiblesLista.innerHTML += `<li><strong>${producto.codigo}:</strong> ${producto.nombre} - $${producto.precio.toFixed(2)} - Stock: ${producto.stock}</li>`;
+    });
+}
+
+// Función para generar ticket de compra
+function generarTicket() {
+    const codigoCompra = document.getElementById('codigo-compra').value;
+    const cantidadCompra = document.getElementById('cantidad-compra').value;
+    const producto = productos.find((p) => p.codigo === parseInt(codigoCompra));
+    if (producto) {
+        const ticketContainer = document.getElementById('ticket-container');
+        ticketContainer.innerHTML = `
+            <h2>Ticket de Compra</h2>
+            <p>Producto: ${producto.nombre}</p>
+            <p>Cantidad: ${cantidadCompra}</p>
+            <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
+        `;
+    } else {
+        alert('Producto no encontrado');
+    }
+}
+
+// Función para guardar ticket como PDF
+function guardarTicketComoPDF() {
+    const ticketContainer = document.getElementById('ticket-container');
+    const ticketHTML = ticketContainer.innerHTML;
+    const pdf = new jsPDF();
+    pdf.fromHTML(ticketHTML, 10, 10);
+    pdf.save('ticket.pdf');
+}
+
+// Agrega eventos a los botones
+document.getElementById('compra-btn').addEventListener('click', () => {
+    document.getElementById('compra-container').style.display = 'block';
+    document.getElementById('agregar-producto-container').style.display = 'none';
+    mostrarProductosDisponibles();
+});
+document.getElementById('generar-ticket-btn').addEventListener('click', generarTicket);
+document.getElementById('guardar-pdf-btn').addEventListener('click', guardarTicketComoPDF);
+
     </script>
 </body>
 </html>
