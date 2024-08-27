@@ -99,155 +99,59 @@
 </head>
 <body>
     <div class="container">
+	
         <h1>Johan's Store</h1>
-
         <div class="productos">
             <h2>Productos Disponibles</h2>
             <ul id="productos-lista"></ul>
         </div>
-
-        <input type="number" id="producto-codigo" placeholder="Código del producto">
-        <input type="number" id="producto-cantidad" placeholder="Cantidad a comprar" min="1">
+		
+        <input type="number" id="codigo" placeholder="Código del producto">
+        <input type="text" id="nombre" placeholder="Nombre del producto">
+        <input type="number" id="precio" placeholder="Precio del producto">
+        <input type="number" id="stock" placeholder="Cantidad en inventario">
         <button id="agregar-producto-btn">Agregar Producto</button>
-
-        <div id="ticket" class="ticket"></div>
-        <button id="generar-pdf-btn">Generar PDF</button>
-        <button id="enviar-whatsapp-btn">Enviar por WhatsApp</button>
     </div>
 
-    <div id="owner-section" class="container owner-section">
-        <h2>Agregar o Actualizar Inventario</h2>
-        <input type="number" id="nuevo-codigo" placeholder="Código del nuevo producto">
-        <input type="text" id="nuevo-nombre" placeholder="Nombre del nuevo producto">
-        <input type="number" id="nuevo-precio" placeholder="Precio del nuevo producto">
-        <input type="number" id="nuevo-stock" placeholder="Cantidad en inventario">
-        <button id="agregar-inventario-btn">Agregar al Inventario</button>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
-        // Función para obtener los productos desde localStorage
-        function obtenerProductos() {
-            const productosGuardados = localStorage.getItem('productos');
-            return productosGuardados ? JSON.parse(productosGuardados) : {
-                "1": { nombre: "Sabritas", precio: 15.0, stock: 100 },
-                "2": { nombre: "Mazapan chocolate", precio: 6.0, stock: 100 },
-                "3": { nombre: "Mazapan chico", precio: 4.0, stock: 100 },
-                "4": { nombre: "Mazapan original", precio: 5.0, stock: 100 },
-                "5": { nombre: "Borrachitos", precio: 3.0, stock: 100 },
-                "6": { nombre: "Bombones", precio: 5.0, stock: 100 },
-                "7": { nombre: "Chicles", precio: 1.0, stock: 100 },
-                "8": { nombre: "Tamarroca", precio: 3.0, stock: 100 },
-                "9": { nombre: "Gomitas", precio: 7.0, stock: 100 },
-                "10": { nombre: "Pepitas", precio: 7.0, stock: 100 },
-                "11": { nombre: "Cacahuates", precio: 5.0, stock: 100 },
-                "12": { nombre: "Obleas", precio: 3.0, stock: 100 },
-                "13": { nombre: "Bon o Bon", precio: 7.0, stock: 100 }
+        // Obtener los productos guardados en el almacenamiento local
+        const productos = JSON.parse(localStorage.getItem('productos')) || [];
+
+        // Función para agregar un producto
+        function agregarProducto() {
+            const codigo = document.getElementById('codigo').value;
+            const nombre = document.getElementById('nombre').value;
+            const precio = document.getElementById('precio').value;
+            const stock = document.getElementById('stock').value;
+            
+            const producto = {
+                codigo,
+                nombre,
+                precio,
+                stock
             };
-        }
-
-        // Función para guardar los productos en localStorage
-        function guardarProductos(productos) {
+            
+            productos.push(producto);
             localStorage.setItem('productos', JSON.stringify(productos));
+            
+            // Actualizar la lista de productos en la página
+            mostrarProductos();
         }
 
-        let productos = obtenerProductos();
-        let ticket = [];
-
+        // Función para mostrar los productos
         function mostrarProductos() {
             const productosLista = document.getElementById('productos-lista');
             productosLista.innerHTML = '';
-
-            for (const [codigo, producto] of Object.entries(productos)) {
-                productosLista.innerHTML += `<li><strong>${codigo}:</strong> ${producto.nombre} - $${producto.precio.toFixed(2)} - Stock: ${producto.stock}</li>`;
-            }
-        }
-
-        function agregarProducto() {
-            const codigo = document.getElementById('producto-codigo').value;
-            const cantidad = parseInt(document.getElementById('producto-cantidad').value);
-
-            if (productos[codigo] && cantidad > 0 && productos[codigo].stock >= cantidad) {
-                const producto = productos[codigo];
-                producto.stock -= cantidad;
-                ticket.push({ ...producto, cantidad });
-                guardarProductos(productos);
-                generarTicket();
-                mostrarProductos();
-            } else {
-                alert("Ingrese un código de producto válido o cantidad correcta.");
-            }
-        }
-
-        function generarTicket() {
-            let total = 0;
-            let ticketHtml = '<h2>Ticket</h2><ul>';
-
-            ticket.forEach((item, index) => {
-                ticketHtml += `<li>${index + 1}. ${item.nombre} - Cantidad: ${item.cantidad} - $${(item.precio * item.cantidad).toFixed(2)}</li>`;
-                total += item.precio * item.cantidad;
+            productos.forEach((producto) => {
+                productosLista.innerHTML += `<li><strong>${producto.codigo}:</strong> ${producto.nombre} - $${producto.precio.toFixed(2)} - Stock: ${producto.stock}</li>`;
             });
-
-            ticketHtml += `</ul><h3>Total: $${total.toFixed(2)}</h3>`;
-
-            document.getElementById('ticket').innerHTML = ticketHtml;
         }
 
-        function generarPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            let contenido = 'Ticket\n\n';
-            ticket.forEach((item, index) => {
-                contenido += `${index + 1}. ${item.nombre} - Cantidad: ${item.cantidad} - $${(item.precio * item.cantidad).toFixed(2)}\n`;
-            });
-
-            const total = ticket.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
-            contenido += `\nTotal: $${total.toFixed(2)}`;
-
-            doc.text(contenido, 10, 10);
-            doc.save('ticket.pdf');
-        }
-
-        function enviarPorWhatsApp() {
-            const numero = "5211234567890"; // Número de teléfono
-            const texto = encodeURIComponent(document.getElementById('ticket').innerText);
-            const url = `https://wa.me/${numero}?text=${texto}`;
-            window.open(url, '_blank');
-        }
-
-        // Función para agregar producto al inventario
-        function agregarInventario() {
-            const codigo = document.getElementById('nuevo-codigo').value;
-            const nombre = document.getElementById('nuevo-nombre').value;
-            const precio = parseFloat(document.getElementById('nuevo-precio').value);
-            const cantidad = parseInt(document.getElementById('nuevo-stock').value);
-
-            if (codigo && nombre && precio > 0 && cantidad > 0) {
-                productos[codigo] = { nombre, precio, stock: cantidad };
-                guardarProductos(productos);
-                mostrarProductos();
-                alert("Producto agregado al inventario con éxito.");
-            } else {
-                alert("Ingrese todos los detalles del producto correctamente.");
-            }
-        }
-
-        document.getElementById('agregar-producto-btn').addEventListener('click', agregarProducto);
-        document.getElementById('generar-pdf-btn').addEventListener('click', generarPDF);
-        document.getElementById('enviar-whatsapp-btn').addEventListener('click', enviarPorWhatsApp);
-        document.getElementById('agregar-inventario-btn').addEventListener('click', agregarInventario);
-
-        // Mostrar productos al cargar la página
+        // Llama a la función mostrarProductos() al cargar la página
         mostrarProductos();
 
-        // Mostrar la sección del dueño con la tecla 'd'
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'd') {
-                const ownerSection = document.getElementById('owner-section');
-                ownerSection.style.display = ownerSection.style.display === 'none' ? 'block' : 'none';
-            }
-        });
+        // Agrega eventos a los botones
+        document.getElementById('agregar-producto-btn').addEventListener('click', agregarProducto);
     </script>
 </body>
 </html>
