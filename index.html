@@ -107,40 +107,41 @@
         <div id="ticket-container"></div>
         <button id="guardar-pdf-btn">Guardar como PDF</button>
     </div>
-    <script src="(link unavailable)"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
-        // Obtener los productos guardados en el almacenamiento local
         const productos = JSON.parse(localStorage.getItem('productos')) || [];
-        
-        // Función para agregar un producto
+
         function agregarProducto() {
-            const codigo = document.getElementById('codigo').value;
+            const codigo = parseInt(document.getElementById('codigo').value);
             const nombre = document.getElementById('nombre').value;
-            const precio = document.getElementById('precio').value;
-            const stock = document.getElementById('stock').value;
-            
-            if (!codigo || !nombre || !precio || !stock) {
-                alert('Por favor, rellene todos los campos');
+            const precio = parseFloat(document.getElementById('precio').value);
+            const stock = parseInt(document.getElementById('stock').value);
+
+            if (isNaN(codigo) || !nombre || isNaN(precio) || isNaN(stock)) {
+                alert('Por favor, rellene todos los campos correctamente');
                 return;
             }
-            
-            const producto = {
-                codigo,
-                nombre,
-                precio,
-                stock
-            };
-            
-            productos.push(producto);
+
+            const productoExistente = productos.find(p => p.codigo === codigo);
+            if (productoExistente) {
+                productoExistente.nombre = nombre;
+                productoExistente.precio = precio;
+                productoExistente.stock = stock;
+                alert('Producto actualizado correctamente');
+            } else {
+                const producto = { codigo, nombre, precio, stock };
+                productos.push(producto);
+                alert('Producto agregado correctamente');
+            }
+
             localStorage.setItem('productos', JSON.stringify(productos));
-            alert('Producto agregado correctamente');
             document.getElementById('codigo').value = '';
             document.getElementById('nombre').value = '';
             document.getElementById('precio').value = '';
             document.getElementById('stock').value = '';
+            mostrarProductosDisponibles();
         }
-        
-        // Función para mostrar productos disponibles
+
         function mostrarProductosDisponibles() {
             const productosDisponiblesLista = document.getElementById('productos-disponibles-lista');
             productosDisponiblesLista.innerHTML = '';
@@ -148,29 +149,31 @@
                 productosDisponiblesLista.innerHTML += `<li><strong>${producto.codigo}:</strong> ${producto.nombre} - $${producto.precio.toFixed(2)} - Stock: ${producto.stock}</li>`;
             });
         }
-        
-        // Función para generar ticket de compra
+
         function generarTicket() {
-            const codigoCompra = document.getElementById('codigo-compra').value;
-            const cantidadCompra = document.getElementById('cantidad-compra').value;
-            
-            if (!codigoCompra || !cantidadCompra) {
-                alert('Por favor, rellene todos los campos');
+            const codigoCompra = parseInt(document.getElementById('codigo-compra').value);
+            const cantidadCompra = parseInt(document.getElementById('cantidad-compra').value);
+
+            if (isNaN(codigoCompra) || isNaN(cantidadCompra)) {
+                alert('Por favor, rellene todos los campos correctamente');
                 return;
             }
-            
-            const producto = productos.find((p) => p.codigo === parseInt(codigoCompra));
-            
+
+            const producto = productos.find((p) => p.codigo === codigoCompra);
+
             if (!producto) {
                 alert('Producto no encontrado');
                 return;
             }
-            
+
             if (cantidadCompra > producto.stock) {
                 alert('No hay suficiente stock para realizar la compra');
                 return;
             }
-            
+
+            producto.stock -= cantidadCompra;
+            localStorage.setItem('productos', JSON.stringify(productos));
+
             const ticketContainer = document.getElementById('ticket-container');
             ticketContainer.innerHTML = `
                 <h2>Ticket de Compra</h2>
@@ -178,34 +181,31 @@
                 <p>Cantidad: ${cantidadCompra}</p>
                 <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
             `;
+            mostrarProductosDisponibles();
         }
-        
-        // Función para guardar ticket como PDF
+
         function guardarTicketComoPDF() {
+            const { jsPDF } = window.jspdf;
             const ticketContainer = document.getElementById('ticket-container');
-            const ticketHTML = ticketContainer.innerHTML;
             const pdf = new jsPDF();
-            pdf.fromHTML(ticketHTML, 10, 10);
+            pdf.fromHTML(ticketContainer.innerHTML, 10, 10);
             pdf.save('ticket.pdf');
         }
-        
-        // Agrega eventos a los botones
+
         document.getElementById('agregar-producto-btn').addEventListener('click', () => {
             document.getElementById('agregar-producto-container').style.display = 'block';
             document.getElementById('compra-container').style.display = 'none';
         });
-        
+
         document.getElementById('compra-btn').addEventListener('click', () => {
             document.getElementById('compra-container').style.display = 'block';
             document.getElementById('agregar-producto-container').style.display = 'none';
             mostrarProductosDisponibles();
         });
-        
+
         document.getElementById('guardar-producto-btn').addEventListener('click', agregarProducto);
         document.getElementById('generar-ticket-btn').addEventListener('click', generarTicket);
         document.getElementById('guardar-pdf-btn').addEventListener('click', guardarTicketComoPDF);
     </script>
 </body>
 </html>
-
-
