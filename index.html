@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Johan's Store</title>
     <style>
-        /* Estilos básicos para la aplicación de venta simple */
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
@@ -27,7 +26,7 @@
             width: 90%;
             max-width: 600px;
             text-align: center;
-            box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+            box-sizing: border-box;
             margin-bottom: 20px;
         }
 
@@ -55,7 +54,7 @@
             padding: 10px;
             margin: 10px 0;
             font-size: 16px;
-            box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+            box-sizing: border-box;
         }
 
         button {
@@ -94,7 +93,7 @@
         }
 
         .owner-section {
-            display: none; /* Oculto por defecto */
+            display: none;
         }
     </style>
 </head>
@@ -102,24 +101,20 @@
     <div class="container">
         <h1>Johan's Store</h1>
 
-        <!-- Sección de Productos -->
         <div class="productos">
             <h2>Productos Disponibles</h2>
             <ul id="productos-lista"></ul>
         </div>
 
-        <!-- Ingreso de Código del Producto -->
         <input type="number" id="producto-codigo" placeholder="Código del producto">
         <input type="number" id="producto-cantidad" placeholder="Cantidad a comprar" min="1">
         <button id="agregar-producto-btn">Agregar Producto</button>
 
-        <!-- Sección de Ticket -->
         <div id="ticket" class="ticket"></div>
         <button id="generar-pdf-btn">Generar PDF</button>
         <button id="enviar-whatsapp-btn">Enviar por WhatsApp</button>
     </div>
 
-    <!-- Sección para el dueño -->
     <div class="container owner-section" id="owner-section">
         <h2>Agregar Producto al Inventario</h2>
         <input type="number" id="nuevo-codigo" placeholder="Código del nuevo producto">
@@ -131,23 +126,32 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
-        // Lista de productos con sus precios y cantidades
-        const productos = {
-            "1": { nombre: "Sabritas", precio: 15.0, stock: 100 },
-            "2": { nombre: "Mazapan chocolate", precio: 6.0, stock: 100 },
-            "3": { nombre: "Mazapan chico", precio: 4.0, stock: 100 },
-            "4": { nombre: "Mazapan original", precio: 5.0, stock: 100 },
-            "5": { nombre: "Borrachitos", precio: 3.0, stock: 100 },
-            "6": { nombre: "Bombones", precio: 5.0, stock: 100 },
-            "7": { nombre: "Chicles", precio: 1.0, stock: 100 },
-            "8": { nombre: "Tamarroca", precio: 3.0, stock: 100 },
-            "9": { nombre: "Gomitas", precio: 7.0, stock: 100 },
-            "10": { nombre: "Pepitas", precio: 7.0, stock: 100 },
-            "11": { nombre: "Cacahuates", precio: 5.0, stock: 100 },
-            "12": { nombre: "Obleas", precio: 3.0, stock: 100 },
-            "13": { nombre: "Bon o Bon", precio: 7.0, stock: 100 }
-        };
+        // Función para obtener los productos desde localStorage
+        function obtenerProductos() {
+            const productosGuardados = localStorage.getItem('productos');
+            return productosGuardados ? JSON.parse(productosGuardados) : {
+                "1": { nombre: "Sabritas", precio: 15.0, stock: 100 },
+                "2": { nombre: "Mazapan chocolate", precio: 6.0, stock: 100 },
+                "3": { nombre: "Mazapan chico", precio: 4.0, stock: 100 },
+                "4": { nombre: "Mazapan original", precio: 5.0, stock: 100 },
+                "5": { nombre: "Borrachitos", precio: 3.0, stock: 100 },
+                "6": { nombre: "Bombones", precio: 5.0, stock: 100 },
+                "7": { nombre: "Chicles", precio: 1.0, stock: 100 },
+                "8": { nombre: "Tamarroca", precio: 3.0, stock: 100 },
+                "9": { nombre: "Gomitas", precio: 7.0, stock: 100 },
+                "10": { nombre: "Pepitas", precio: 7.0, stock: 100 },
+                "11": { nombre: "Cacahuates", precio: 5.0, stock: 100 },
+                "12": { nombre: "Obleas", precio: 3.0, stock: 100 },
+                "13": { nombre: "Bon o Bon", precio: 7.0, stock: 100 }
+            };
+        }
 
+        // Función para guardar los productos en localStorage
+        function guardarProductos(productos) {
+            localStorage.setItem('productos', JSON.stringify(productos));
+        }
+
+        let productos = obtenerProductos();
         let ticket = [];
 
         function mostrarProductos() {
@@ -167,6 +171,7 @@
                 const producto = productos[codigo];
                 producto.stock -= cantidad;
                 ticket.push({ ...producto, cantidad });
+                guardarProductos(productos);
                 generarTicket();
                 mostrarProductos();
             } else {
@@ -220,6 +225,7 @@
 
             if (codigo && nombre && precio > 0 && cantidad > 0) {
                 productos[codigo] = { nombre, precio, stock: cantidad };
+                guardarProductos(productos);
                 mostrarProductos();
                 alert("Producto agregado al inventario con éxito.");
             } else {
@@ -227,16 +233,15 @@
             }
         }
 
-        // Vincula los botones a sus respectivos eventos
         document.getElementById('agregar-producto-btn').addEventListener('click', agregarProducto);
         document.getElementById('generar-pdf-btn').addEventListener('click', generarPDF);
         document.getElementById('enviar-whatsapp-btn').addEventListener('click', enviarPorWhatsApp);
         document.getElementById('agregar-inventario-btn').addEventListener('click', agregarInventario);
 
-        // Muestra los productos disponibles al cargar la página
+        // Mostrar productos al cargar la página
         mostrarProductos();
 
-        // Código para mostrar la sección del dueño
+        // Mostrar la sección del dueño con la tecla 'd'
         document.addEventListener('keydown', function (event) {
             if (event.key === 'd') {
                 const ownerSection = document.getElementById('owner-section');
