@@ -14,16 +14,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             flex-direction: column;
         }
         .container {
             background-color: #fff;
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
+            width: 90%;
+            max-width: 600px;
             text-align: center;
             box-sizing: border-box;
             margin-bottom: 20px;
@@ -32,39 +32,60 @@
             margin-bottom: 20px;
             font-size: 24px;
         }
+        .productos {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .productos ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .productos li {
+            margin-bottom: 10px;
+        }
         input, button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             font-size: 16px;
             box-sizing: border-box;
-            border-radius: 4px;
         }
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
+            border-radius: 4px;
         }
         button:hover {
             background-color: #45a049;
         }
-        .productos ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        .productos li {
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
         .ticket {
             margin-top: 20px;
             text-align: left;
-            font-size: 14px;
         }
-        #ticket-container {
-            margin-top: 10px;
+        .ticket h2 {
+            margin-bottom: 10px;
+        }
+        .ticket ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .ticket li {
+            margin-bottom: 5px;
+        }
+        .ticket h3 {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .owner-section {
+            display: none;
+        }
+        #regresar-btn {
+            background-color: #2196F3;
+        }
+        #regresar-btn:hover {
+            background-color: #1976D2;
         }
     </style>
 </head>
@@ -74,7 +95,7 @@
         <button id="agregar-producto-btn">Agregar Producto</button>
         <button id="compra-btn">Compra</button>
     </div>
-    <div id="agregar-producto-container" class="container" style="display: none;">
+    <div id="agregar-producto-container" style="display: none;">
         <h2>Agregar Producto</h2>
         <input type="number" id="codigo" placeholder="Código del producto">
         <input type="text" id="nombre" placeholder="Nombre del producto">
@@ -82,7 +103,7 @@
         <input type="number" id="stock" placeholder="Cantidad en inventario">
         <button id="guardar-producto-btn">Guardar Producto</button>
     </div>
-    <div id="compra-container" class="container" style="display: none;">
+    <div id="compra-container" style="display: none;">
         <h2>Compra</h2>
         <h3>Productos Disponibles</h3>
         <ul id="productos-disponibles-lista"></ul>
@@ -91,6 +112,7 @@
         <button id="generar-ticket-btn">Generar Ticket</button>
         <div id="ticket-container"></div>
         <button id="guardar-pdf-btn">Guardar como PDF</button>
+        <button id="regresar-btn">Volver a Compra</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
@@ -166,24 +188,36 @@
                 <p>Cantidad: ${cantidadCompra}</p>
                 <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
             `;
+
             mostrarProductosDisponibles();
+            document.getElementById('compra-container').style.display = 'none';
+            document.getElementById('ticket-container').style.display = 'block';
+            document.getElementById('guardar-pdf-btn').style.display = 'block';
+            document.getElementById('regresar-btn').style.display = 'block';
         }
 
         function guardarTicketComoPDF() {
             const { jsPDF } = window.jspdf;
             const ticketContainer = document.getElementById('ticket-container');
             const pdf = new jsPDF();
-            pdf.fromHTML(ticketContainer.innerHTML, 10, 10);
-            pdf.save('ticket.pdf');
+            pdf.html(ticketContainer, {
+                callback: function (pdf) {
+                    pdf.save('ticket.pdf');
+                },
+                x: 10,
+                y: 10
+            });
         }
 
-        // Agregar listeners de click y touchstart
-        function addEventListeners(selector, handler) {
-            const element = document.querySelector(selector);
-            if (element) {
-                element.addEventListener('click', handler);
-                element.addEventListener('touchstart', handler);
-            }
+        function regresarCompra() {
+            document.getElementById('compra-container').style.display = 'block';
+            document.getElementById('ticket-container').style.display = 'none';
+            document.getElementById('guardar-pdf-btn').style.display = 'none';
+            document.getElementById('regresar-btn').style.display = 'none';
+        }
+
+        function addEventListeners(selector, func) {
+            document.querySelector(selector).addEventListener('click', func);
         }
 
         addEventListeners('#agregar-producto-btn', () => {
@@ -200,6 +234,7 @@
         addEventListeners('#guardar-producto-btn', agregarProducto);
         addEventListeners('#generar-ticket-btn', generarTicket);
         addEventListeners('#guardar-pdf-btn', guardarTicketComoPDF);
+        addEventListeners('#regresar-btn', regresarCompra);
     </script>
 </body>
 </html>
