@@ -99,18 +99,24 @@
 </head>
 <body>
     <div class="container">
-	
         <h1>Johan's Store</h1>
         <div class="productos">
             <h2>Productos Disponibles</h2>
             <ul id="productos-lista"></ul>
         </div>
-		
         <input type="number" id="codigo" placeholder="Código del producto">
         <input type="text" id="nombre" placeholder="Nombre del producto">
         <input type="number" id="precio" placeholder="Precio del producto">
         <input type="number" id="stock" placeholder="Cantidad en inventario">
         <button id="agregar-producto-btn">Agregar Producto</button>
+        <button id="compra-btn">Compra</button>
+        <div id="compra-container" style="display: none;">
+            <h2>Compra</h2>
+            <input type="number" id="codigo-compra" placeholder="Código del producto">
+            <input type="number" id="cantidad-compra" placeholder="Cantidad">
+            <button id="generar-ticket-btn">Generar Ticket</button>
+            <div id="ticket-container"></div>
+        </div>
     </div>
 
     <script>
@@ -147,11 +153,33 @@
             });
         }
 
+        // Función para generar ticket de compra
+        function generarTicket() {
+            const codigoCompra = document.getElementById('codigo-compra').value;
+            const cantidadCompra = document.getElementById('cantidad-compra').value;
+            const producto = productos.find((p) => p.codigo === parseInt(codigoCompra));
+            if (producto) {
+                const ticketContainer = document.getElementById('ticket-container');
+                ticketContainer.innerHTML = `
+                    <h2>Ticket de Compra</h2>
+                    <p>Producto: ${producto.nombre}</p>
+                    <p>Cantidad: ${cantidadCompra}</p>
+                    <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
+                `;
+            } else {
+                alert('Producto no encontrado');
+            }
+        }
+
         // Llama a la función mostrarProductos() al cargar la página
         mostrarProductos();
 
         // Agrega eventos a los botones
         document.getElementById('agregar-producto-btn').addEventListener('click', agregarProducto);
+        document.getElementById('compra-btn').addEventListener('click', () => {
+            document.getElementById('compra-container').style.display = 'block';
+        });
+        document.getElementById('generar-ticket-btn').addEventListener('click', generarTicket);
     </script>
 </body>
 </html>
