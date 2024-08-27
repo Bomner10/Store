@@ -78,9 +78,6 @@
             margin-top: 20px;
             font-size: 18px;
         }
-        .owner-section {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -96,6 +93,7 @@
         <input type="number" id="precio" placeholder="Precio del producto">
         <input type="number" id="stock" placeholder="Cantidad en inventario">
         <button id="guardar-producto-btn">Guardar Producto</button>
+        <p id="mensaje-producto"></p> <!-- Mensaje para mostrar el estado de guardado -->
     </div>
     <div id="compra-container" style="display: none;">
         <h2>Compra</h2>
@@ -127,11 +125,11 @@
                 productoExistente.nombre = nombre;
                 productoExistente.precio = precio;
                 productoExistente.stock = stock;
-                alert('Producto actualizado correctamente');
+                document.getElementById('mensaje-producto').innerText = 'Producto actualizado correctamente';
             } else {
                 const producto = { codigo, nombre, precio, stock };
                 productos.push(producto);
-                alert('Producto agregado correctamente');
+                document.getElementById('mensaje-producto').innerText = 'Producto agregado correctamente';
             }
 
             localStorage.setItem('productos', JSON.stringify(productos));
@@ -179,7 +177,7 @@
                 <h2>Ticket de Compra</h2>
                 <p>Producto: ${producto.nombre}</p>
                 <p>Cantidad: ${cantidadCompra}</p>
-                <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
+                <p>Precio Total: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
             `;
             mostrarProductosDisponibles();
         }
@@ -195,6 +193,7 @@
         document.getElementById('agregar-producto-btn').addEventListener('click', () => {
             document.getElementById('agregar-producto-container').style.display = 'block';
             document.getElementById('compra-container').style.display = 'none';
+            document.getElementById('mensaje-producto').innerText = ''; // Limpiar mensaje al abrir
         });
 
         document.getElementById('compra-btn').addEventListener('click', () => {
