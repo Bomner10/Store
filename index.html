@@ -177,20 +177,29 @@
             pdf.save('ticket.pdf');
         }
 
-        document.getElementById('agregar-producto-btn').addEventListener('click', () => {
+        // Agregar listeners de click y touchstart
+        function addEventListeners(selector, handler) {
+            const element = document.querySelector(selector);
+            if (element) {
+                element.addEventListener('click', handler);
+                element.addEventListener('touchstart', handler);
+            }
+        }
+
+        addEventListeners('#agregar-producto-btn', () => {
             document.getElementById('agregar-producto-container').style.display = 'block';
             document.getElementById('compra-container').style.display = 'none';
         });
 
-        document.getElementById('compra-btn').addEventListener('click', () => {
+        addEventListeners('#compra-btn', () => {
             document.getElementById('compra-container').style.display = 'block';
             document.getElementById('agregar-producto-container').style.display = 'none';
             mostrarProductosDisponibles();
         });
 
-        document.getElementById('guardar-producto-btn').addEventListener('click', agregarProducto);
-        document.getElementById('generar-ticket-btn').addEventListener('click', generarTicket);
-        document.getElementById('guardar-pdf-btn').addEventListener('click', guardarTicketComoPDF);
+        addEventListeners('#guardar-producto-btn', agregarProducto);
+        addEventListeners('#generar-ticket-btn', generarTicket);
+        addEventListeners('#guardar-pdf-btn', guardarTicketComoPDF);
     </script>
 </body>
 </html>
