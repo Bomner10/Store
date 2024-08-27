@@ -110,9 +110,9 @@
         <input type="number" id="codigo-compra" placeholder="Código del producto">
         <input type="number" id="cantidad-compra" placeholder="Cantidad">
         <button id="generar-ticket-btn">Generar Ticket</button>
-        <div id="ticket-container"></div>
-        <button id="guardar-pdf-btn">Guardar como PDF</button>
-        <button id="regresar-btn">Volver a Compra</button>
+        <div id="ticket-container" style="display: none;"></div>
+        <button id="guardar-pdf-btn" style="display: none;">Guardar como PDF</button>
+        <button id="regresar-btn" style="display: none;">Volver a Compra</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
@@ -189,9 +189,8 @@
                 <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
             `;
 
-            mostrarProductosDisponibles();
             document.getElementById('compra-container').style.display = 'none';
-            document.getElementById('ticket-container').style.display = 'block';
+            ticketContainer.style.display = 'block';
             document.getElementById('guardar-pdf-btn').style.display = 'block';
             document.getElementById('regresar-btn').style.display = 'block';
         }
@@ -223,11 +222,17 @@
         addEventListeners('#agregar-producto-btn', () => {
             document.getElementById('agregar-producto-container').style.display = 'block';
             document.getElementById('compra-container').style.display = 'none';
+            document.getElementById('ticket-container').style.display = 'none';
+            document.getElementById('guardar-pdf-btn').style.display = 'none';
+            document.getElementById('regresar-btn').style.display = 'none';
         });
 
         addEventListeners('#compra-btn', () => {
             document.getElementById('compra-container').style.display = 'block';
             document.getElementById('agregar-producto-container').style.display = 'none';
+            document.getElementById('ticket-container').style.display = 'none';
+            document.getElementById('guardar-pdf-btn').style.display = 'none';
+            document.getElementById('regresar-btn').style.display = 'none';
             mostrarProductosDisponibles();
         });
 
