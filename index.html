@@ -14,16 +14,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             flex-direction: column;
         }
         .container {
             background-color: #fff;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 600px;
+            width: 100%;
+            max-width: 400px;
             text-align: center;
             box-sizing: border-box;
             margin-bottom: 20px;
@@ -32,51 +32,39 @@
             margin-bottom: 20px;
             font-size: 24px;
         }
-        .productos {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-        .productos ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .productos li {
-            margin-bottom: 10px;
-        }
         input, button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             font-size: 16px;
             box-sizing: border-box;
+            border-radius: 4px;
         }
         button {
             background-color: #4CAF50;
             color: white;
             border: none;
             cursor: pointer;
-            border-radius: 4px;
         }
         button:hover {
             background-color: #45a049;
         }
+        .productos ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .productos li {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
         .ticket {
             margin-top: 20px;
             text-align: left;
+            font-size: 14px;
         }
-        .ticket h2 {
-            margin-bottom: 10px;
-        }
-        .ticket ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .ticket li {
-            margin-bottom: 5px;
-        }
-        .ticket h3 {
-            margin-top: 20px;
-            font-size: 18px;
+        #ticket-container {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -86,16 +74,15 @@
         <button id="agregar-producto-btn">Agregar Producto</button>
         <button id="compra-btn">Compra</button>
     </div>
-    <div id="agregar-producto-container" style="display: none;">
+    <div id="agregar-producto-container" class="container" style="display: none;">
         <h2>Agregar Producto</h2>
         <input type="number" id="codigo" placeholder="Código del producto">
         <input type="text" id="nombre" placeholder="Nombre del producto">
         <input type="number" id="precio" placeholder="Precio del producto">
         <input type="number" id="stock" placeholder="Cantidad en inventario">
         <button id="guardar-producto-btn">Guardar Producto</button>
-        <p id="mensaje-producto"></p> <!-- Mensaje para mostrar el estado de guardado -->
     </div>
-    <div id="compra-container" style="display: none;">
+    <div id="compra-container" class="container" style="display: none;">
         <h2>Compra</h2>
         <h3>Productos Disponibles</h3>
         <ul id="productos-disponibles-lista"></ul>
@@ -125,11 +112,11 @@
                 productoExistente.nombre = nombre;
                 productoExistente.precio = precio;
                 productoExistente.stock = stock;
-                document.getElementById('mensaje-producto').innerText = 'Producto actualizado correctamente';
+                alert('Producto actualizado correctamente');
             } else {
                 const producto = { codigo, nombre, precio, stock };
                 productos.push(producto);
-                document.getElementById('mensaje-producto').innerText = 'Producto agregado correctamente';
+                alert('Producto agregado correctamente');
             }
 
             localStorage.setItem('productos', JSON.stringify(productos));
@@ -177,7 +164,7 @@
                 <h2>Ticket de Compra</h2>
                 <p>Producto: ${producto.nombre}</p>
                 <p>Cantidad: ${cantidadCompra}</p>
-                <p>Precio Total: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
+                <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
             `;
             mostrarProductosDisponibles();
         }
@@ -193,7 +180,6 @@
         document.getElementById('agregar-producto-btn').addEventListener('click', () => {
             document.getElementById('agregar-producto-container').style.display = 'block';
             document.getElementById('compra-container').style.display = 'none';
-            document.getElementById('mensaje-producto').innerText = ''; // Limpiar mensaje al abrir
         });
 
         document.getElementById('compra-btn').addEventListener('click', () => {
