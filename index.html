@@ -115,12 +115,12 @@
         <button id="enviar-whatsapp-btn">Enviar por WhatsApp</button>
     </div>
 
-    <div class="container owner-section" id="owner-section">
-        <h2>Agregar Producto al Inventario</h2>
+    <div id="owner-section" class="container owner-section">
+        <h2>Agregar o Actualizar Inventario</h2>
         <input type="number" id="nuevo-codigo" placeholder="Código del nuevo producto">
         <input type="text" id="nuevo-nombre" placeholder="Nombre del nuevo producto">
         <input type="number" id="nuevo-precio" placeholder="Precio del nuevo producto">
-        <input type="number" id="nuevo-inventario" placeholder="Cantidad en inventario">
+        <input type="number" id="nuevo-stock" placeholder="Cantidad en inventario">
         <button id="agregar-inventario-btn">Agregar al Inventario</button>
     </div>
 
@@ -221,7 +221,7 @@
             const codigo = document.getElementById('nuevo-codigo').value;
             const nombre = document.getElementById('nuevo-nombre').value;
             const precio = parseFloat(document.getElementById('nuevo-precio').value);
-            const cantidad = parseInt(document.getElementById('nuevo-inventario').value);
+            const cantidad = parseInt(document.getElementById('nuevo-stock').value);
 
             if (codigo && nombre && precio > 0 && cantidad > 0) {
                 productos[codigo] = { nombre, precio, stock: cantidad };
