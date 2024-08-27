@@ -98,7 +98,7 @@
     </style>
 </head>
 <body>
-      <div class="container">
+     <div class="container">
         <h1>Johan's Store</h1>
         <button id="agregar-producto-btn">Agregar Producto</button>
         <button id="compra-btn">Compra</button>
@@ -132,16 +132,22 @@
             const nombre = document.getElementById('nombre').value;
             const precio = document.getElementById('precio').value;
             const stock = document.getElementById('stock').value;
-            
+
+            if (!codigo || !nombre || !precio || !stock) {
+                alert('Por favor, rellene todos los campos');
+                return;
+            }
+
             const producto = {
                 codigo,
                 nombre,
                 precio,
                 stock
             };
-            
+
             productos.push(producto);
             localStorage.setItem('productos', JSON.stringify(productos));
+            alert('Producto agregado correctamente');
         }
 
         // Función para mostrar productos disponibles
@@ -157,34 +163,47 @@
         function generarTicket() {
             const codigoCompra = document.getElementById('codigo-compra').value;
             const cantidadCompra = document.getElementById('cantidad-compra').value;
-            const producto = productos.find((p) => p.codigo === parseInt(codigoCompra));
-            if (producto) {
-                const ticketContainer = document.getElementById('ticket-container');
-                ticketContainer.innerHTML = `
-                    <h2>Ticket de Compra</h2>
-                    <p>Producto: ${producto.nombre}</p>
-                    <p>Cantidad: ${cantidadCompra}</p>
-                    <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
-                `;
-            } else {
-                alert('Producto no encontrado');
+
+            if (!codigoCompra || !cantidadCompra) {
+                alert('Por favor, rellene todos los campos');
+                return;
             }
+
+            const producto = productos.find((p) => p.codigo === parseInt(codigoCompra));
+
+            if (!producto) {
+                alert('Producto no encontrado');
+                return;
+            }
+
+            if (cantidadCompra > producto.stock) {
+                alert('No hay suficiente stock para realizar la compra');
+                return;
+            }
+
+            const ticketContainer = document.getElementById('ticket-container');
+            ticketContainer.innerHTML = `
+                <h2>Ticket de Compra</h2>
+                <p>Producto: ${producto.nombre}</p>
+                <p>Cantidad: ${cantidadCompra}</p>
+                <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
+            `;
         }
 
         // Función para guardar ticket como PDF
         function guardarTicketComoPDF() {
             const ticketContainer = document.getElementById('ticket-container');
             const ticketHTML = ticketContainer.innerHTML;
-            const pdf = new jsPDF();
-pdf.fromHTML(ticketHTML, 10, 10);
+            const pdf = new jsPDF();
+            pdf.fromHTML(ticketHTML, 10, 10);
             pdf.save('ticket.pdf');
         }
 
         // Agrega eventos a los botones
         document.getElementById('agregar-producto-btn').addEventListener('click', () => {
             document.getElementById('agregar-producto-container').style.display = 'block';
-            document.getElementById('compra-container').style.display = 'none';
-        });
+            document.getElementById('compra-container').style.display = 'none
+                });
         document.getElementById('compra-btn').addEventListener('click', () => {
             document.getElementById('compra-container').style.display = 'block';
             document.getElementById('agregar-producto-container').style.display = 'none';
@@ -196,5 +215,6 @@ pdf.fromHTML(ticketHTML, 10, 10);
     </script>
 </body>
 </html>
+
 
 
