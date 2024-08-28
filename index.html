@@ -1,122 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Yessi's Store</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css">
     <style>
-      body {
-        font-family: "Arial", sans-serif;
-        background-color: #ffe4e1;
-        color: #333;
-        margin: 0;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      h1,
-      h3 {
-        color: #d63384;
-      }
-      .input,
-      .button,
-      select {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border: 2px solid #d63384;
-        border-radius: 5px;
-        box-sizing: border-box;
-      }
-      .button {
-        background-color: #d63384;
-        color: #fff;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-      .button:hover {
-        background-color: #c2185b;
-      }
-      .container {
-        max-width: 400px;
-        width: 100%;
-      }
-      .ticket-container {
-        margin-top: 20px;
-        background-color: #fff;
-        padding: 15px;
-        border: 1px solid #d63384;
-        border-radius: 5px;
-      }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffe4e1;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1, h3 {
+            color: #d63384;
+        }
+        .input, .button, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #d63384;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .button {
+            background-color: #d63384;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #c2185b;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+        }
+        .ticket-container {
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border: 1px solid #d63384;
+            border-radius: 5px;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div class="container">
-      <h1>Yessi's Store</h1>
-      <h3>Añade un producto</h3>
-      <form id="product-form">
+        <h1>Yessi's Store</h1>
+        <h3>Añade un producto</h3>
+        <form id="product-form">
+            <div>
+                <label for="Productos"></label>
+                <select id="producto" required>
+                    <option value="">Seleccionar producto</option>
+                    <option value="Obleas">Obleas - $3.00</option>
+                    <option value="Pachicleta">Pachicleta - $5.00</option>
+                    <option value="Paleta de mango">Paleta de mango - $5.00</option>
+                    <option value="Paleta de piña">Paleta de piña - $5.00</option>
+                    <option value="Paleta de sandía">Paleta de sandía - $5.00</option>
+                    <option value="Paleta de elote">Paleta de elote - $5.00</option>
+                    <option value="Chirritos">Chirritos - $5.00</option>
+                    <option value="Nucita">Nucita - $5.00</option>
+                </select>
+            </div>
+            <div>
+                <label for="Cantidad"></label>
+                <input type="number" id="cantidad" class="input" min="1" max="100" placeholder="Cantidad" required>
+            </div>
+            <div>
+                <input type="submit" value="Agregar al Ticket" class="button">
+                <input type="reset" value="Borrar" class="button">
+            </div>
+        </form>
         <div>
-          <label for="Productos"></label>
-          <select id="producto" required>
-            <option value="">Seleccionar producto</option>
-            <option value="Obleas">Obleas - $3.00</option>
-            <option value="Pachicleta">Pachicleta - $5.00</option>
-            <option value="Paleta de mango">Paleta de mango - $5.00</option>
-            <option value="Paleta de piña">Paleta de piña - $5.00</option>
-            <option value="Paleta de sandía">Paleta de sandía - $5.00</option>
-            <option value="Paleta de elote">Paleta de elote - $5.00</option>
-            <option value="Chirritos">Chirritos - $5.00</option>
-            <option value="Nucita">Nucita - $5.00</option>
-          </select>
+            <button id="finish" class="button">Completar compra</button>
         </div>
-        <div>
-          <label for="Cantidad"></label>
-          <input
-            type="number"
-            id="cantidad"
-            class="input"
-            min="1"
-            max="100"
-            placeholder="Cantidad"
-            required
-          />
+        <div id="ticket-container" class="ticket-container" style="display: none;"></div>
+        <div id="whatsapp-container" style="display: none;">
+            <button id="send-whatsapp" class="button">Enviar Ticket por WhatsApp</button>
         </div>
-        <div>
-          <input type="submit" value="Agregar al Ticket" class="button" />
-          <input type="reset" value="Borrar" class="button" />
-        </div>
-      </form>
-      <div>
-        <button id="finish" class="button">Completar compra</button>
-      </div>
-      <div
-        id="ticket-container"
-        class="ticket-container"
-        style="display: none"
-      ></div>
-      <div id="whatsapp-container" style="display: none">
-        <button id="send-whatsapp" class="button">
-          Enviar Ticket por WhatsApp
-        </button>
-      </div>
     </div>
 
     <script>
-      const precios = {
-        Obleas: 3.0,
-        Pachicleta: 5.0,
-        "Paleta de mango": 5.0,
-        "Paleta de piña": 5.0,
-        "Paleta de sandía": 5.0,
-        "Paleta de elote": 5.0,
-        Chirritos: 5.0,
-        Nucita: 5.0,
-      };
+        const precios = {
+            "Obleas": 3.00,
+            "Pachicleta": 5.00,
+            "Paleta de mango": 5.00,
+            "Paleta de piña": 5.00,
+            "Paleta de sandía": 5.00,
+            "Paleta de elote": 5.00,
+            "Chirritos": 5.00,
+            "Nucita": 5.00
+        };
 
-     
         let ticket = [];
 
         document.getElementById('product-form').addEventListener('submit', function(event) {
@@ -148,26 +130,17 @@
         document.getElementById('finish').addEventListener('click', mostrarTicket);
 
         document.getElementById('send-whatsapp').addEventListener('click', function() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const numeroWhatsApp = '5548095699'; // Reemplaza con el número de WhatsApp destino
+            let mensaje = 'Hola! Aquí está tu ticket de compra:%0A%0A';
 
-            let contenido = 'Ticket de Compra:\n';
             ticket.forEach(item => {
-                contenido += `${item.producto}: ${item.cantidad} x $${item.precio.toFixed(2)} = $${item.total.toFixed(2)}\n`;
+                mensaje += `${item.producto}: ${item.cantidad} x $${item.precio.toFixed(2)} = $${item.total.toFixed(2)}%0A`;
             });
 
             const totalCompra = ticket.reduce((total, item) => total + item.total, 0);
-            contenido += `\nTotal: $${totalCompra.toFixed(2)}`;
+            mensaje += `Total: $${totalCompra.toFixed(2)}`;
 
-            // Añadir contenido al PDF
-            doc.text(contenido, 10, 10);
-
-            // Generar el archivo PDF
-            doc.save('ticket.pdf');
-
-            // Simulación de envío de archivo por WhatsApp
-            const numeroWhatsApp = '5548095699'; // Reemplaza con el número de WhatsApp destino
-            const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=Hola!%20Tu%20ticket%20ha%20sido%20generado.%20Por%20favor,%20descarga%20el%20archivo%20PDF.`;
+            const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
             window.open(urlWhatsApp, '_blank');
         });
     </script>
