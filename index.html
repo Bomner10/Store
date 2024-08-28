@@ -17,6 +17,7 @@
             height: 100vh;
             flex-direction: column;
         }
+
         .container {
             background-color: #fff;
             padding: 20px;
@@ -26,23 +27,27 @@
             max-width: 600px;
             text-align: center;
             box-sizing: border-box;
-            margin-bottom: 20px;
         }
+
         h1 {
             margin-bottom: 20px;
             font-size: 24px;
         }
-        .productos {
+
+        .productos, .ticket {
             text-align: left;
             margin-bottom: 20px;
         }
-        .productos ul {
+
+        .productos ul, .ticket ul {
             list-style-type: none;
             padding: 0;
         }
-        .productos li {
+
+        .productos li, .ticket li {
             margin-bottom: 10px;
         }
+
         input, button {
             width: 100%;
             padding: 10px;
@@ -50,6 +55,7 @@
             font-size: 16px;
             box-sizing: border-box;
         }
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -57,33 +63,24 @@
             cursor: pointer;
             border-radius: 4px;
         }
+
         button:hover {
             background-color: #45a049;
         }
-        .ticket {
-            margin-top: 20px;
-            text-align: left;
-        }
+
         .ticket h2 {
             margin-bottom: 10px;
         }
-        .ticket ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .ticket li {
-            margin-bottom: 5px;
-        }
+
         .ticket h3 {
             margin-top: 20px;
             font-size: 18px;
         }
-        .owner-section {
-            display: none;
-        }
+
         #regresar-btn {
             background-color: #2196F3;
         }
+
         #regresar-btn:hover {
             background-color: #1976D2;
         }
@@ -92,31 +89,49 @@
 <body>
     <div class="container">
         <h1>Johan's Store</h1>
-        <button id="agregar-producto-btn">Agregar Producto</button>
-        <button id="compra-btn">Compra</button>
-    </div>
-    <div id="agregar-producto-container" style="display: none;">
-        <h2>Agregar Producto</h2>
-        <input type="number" id="codigo" placeholder="Código del producto">
-        <input type="text" id="nombre" placeholder="Nombre del producto">
-        <input type="number" id="precio" placeholder="Precio del producto">
-        <input type="number" id="stock" placeholder="Cantidad en inventario">
-        <button id="guardar-producto-btn">Guardar Producto</button>
-    </div>
-    <div id="compra-container" style="display: none;">
-        <h2>Compra</h2>
-        <h3>Productos Disponibles</h3>
-        <ul id="productos-disponibles-lista"></ul>
-        <input type="number" id="codigo-compra" placeholder="Código del producto">
-        <input type="number" id="cantidad-compra" placeholder="Cantidad">
-        <button id="generar-ticket-btn">Generar Ticket</button>
-        <div id="ticket-container" style="display: none;"></div>
+
+        <!-- Sección de Productos -->
+        <div id="productos-container" class="productos">
+            <h2>Productos Disponibles</h2>
+            <ul id="productos-lista"></ul>
+        </div>
+
+        <!-- Formulario de Agregar Producto -->
+        <div id="agregar-producto-container">
+            <h2>Agregar Producto</h2>
+            <input type="number" id="codigo" placeholder="Código del producto" min="1">
+            <input type="text" id="nombre" placeholder="Nombre del producto">
+            <input type="number" id="precio" placeholder="Precio del producto" step="0.01">
+            <input type="number" id="stock" placeholder="Cantidad en inventario" min="0">
+            <button id="guardar-producto-btn">Guardar Producto</button>
+        </div>
+
+        <!-- Ingreso de Código del Producto para Compra -->
+        <div id="compra-container">
+            <input type="number" id="producto-codigo" placeholder="Código del producto">
+            <button id="agregar-al-ticket-btn">Agregar al Ticket</button>
+        </div>
+
+        <!-- Sección de Ticket -->
+        <div id="ticket-container" class="ticket" style="display: none;"></div>
         <button id="guardar-pdf-btn" style="display: none;">Guardar como PDF</button>
         <button id="regresar-btn" style="display: none;">Volver a Compra</button>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
+        // Productos guardados en localStorage
         const productos = JSON.parse(localStorage.getItem('productos')) || [];
+        let ticket = [];
+
+        function mostrarProductosDisponibles() {
+            const productosLista = document.getElementById('productos-lista');
+            productosLista.innerHTML = '';
+
+            productos.forEach((producto) => {
+                productosLista.innerHTML += `<li><strong>${producto.codigo}:</strong> ${producto.nombre} - $${producto.precio.toFixed(2)} - Stock: ${producto.stock}</li>`;
+            });
+        }
 
         function agregarProducto() {
             const codigo = parseInt(document.getElementById('codigo').value);
@@ -149,50 +164,36 @@
             mostrarProductosDisponibles();
         }
 
-        function mostrarProductosDisponibles() {
-            const productosDisponiblesLista = document.getElementById('productos-disponibles-lista');
-            productosDisponiblesLista.innerHTML = '';
-            productos.forEach((producto) => {
-                productosDisponiblesLista.innerHTML += `<li><strong>${producto.codigo}:</strong> ${producto.nombre} - $${producto.precio.toFixed(2)} - Stock: ${producto.stock}</li>`;
-            });
+        function agregarProductoAlTicket() {
+            const codigo = document.getElementById('producto-codigo').value;
+            const producto = productos.find(p => p.codigo === parseInt(codigo));
+
+            if (producto) {
+                ticket.push(producto);
+                generarTicket();
+            } else {
+                alert('Producto no encontrado');
+            }
         }
 
         function generarTicket() {
-            const codigoCompra = parseInt(document.getElementById('codigo-compra').value);
-            const cantidadCompra = parseInt(document.getElementById('cantidad-compra').value);
+            let total = 0;
+            let ticketHtml = '<h2>Ticket</h2><ul>';
 
-            if (isNaN(codigoCompra) || isNaN(cantidadCompra)) {
-                alert('Por favor, rellene todos los campos correctamente');
-                return;
-            }
+            ticket.forEach((item, index) => {
+                ticketHtml += `<li>${index + 1}. ${item.nombre} - $${item.precio.toFixed(2)}</li>`;
+                total += item.precio;
+            });
 
-            const producto = productos.find((p) => p.codigo === codigoCompra);
-
-            if (!producto) {
-                alert('Producto no encontrado');
-                return;
-            }
-
-            if (cantidadCompra > producto.stock) {
-                alert('No hay suficiente stock para realizar la compra');
-                return;
-            }
-
-            producto.stock -= cantidadCompra;
-            localStorage.setItem('productos', JSON.stringify(productos));
+            ticketHtml += `</ul><h3>Total: $${total.toFixed(2)}</h3>`;
 
             const ticketContainer = document.getElementById('ticket-container');
-            ticketContainer.innerHTML = `
-                <h2>Ticket de Compra</h2>
-                <p>Producto: ${producto.nombre}</p>
-                <p>Cantidad: ${cantidadCompra}</p>
-                <p>Precio: $${(producto.precio * cantidadCompra).toFixed(2)}</p>
-            `;
-
-            document.getElementById('compra-container').style.display = 'none';
+            ticketContainer.innerHTML = ticketHtml;
             ticketContainer.style.display = 'block';
             document.getElementById('guardar-pdf-btn').style.display = 'block';
             document.getElementById('regresar-btn').style.display = 'block';
+            document.getElementById('productos-container').style.display = 'none';
+            document.getElementById('compra-container').style.display = 'none';
         }
 
         function guardarTicketComoPDF() {
@@ -202,44 +203,24 @@
             pdf.html(ticketContainer, {
                 callback: function (pdf) {
                     pdf.save('ticket.pdf');
-                },
-                x: 10,
-                y: 10
+                }
             });
         }
 
-        function regresarCompra() {
+        function volverACompra() {
+            document.getElementById('productos-container').style.display = 'block';
             document.getElementById('compra-container').style.display = 'block';
             document.getElementById('ticket-container').style.display = 'none';
             document.getElementById('guardar-pdf-btn').style.display = 'none';
             document.getElementById('regresar-btn').style.display = 'none';
         }
 
-        function addEventListeners(selector, func) {
-            document.querySelector(selector).addEventListener('click', func);
-        }
+        document.getElementById('guardar-producto-btn').addEventListener('click', agregarProducto);
+        document.getElementById('agregar-al-ticket-btn').addEventListener('click', agregarProductoAlTicket);
+        document.getElementById('guardar-pdf-btn').addEventListener('click', guardarTicketComoPDF);
+        document.getElementById('regresar-btn').addEventListener('click', volverACompra);
 
-        addEventListeners('#agregar-producto-btn', () => {
-            document.getElementById('agregar-producto-container').style.display = 'block';
-            document.getElementById('compra-container').style.display = 'none';
-            document.getElementById('ticket-container').style.display = 'none';
-            document.getElementById('guardar-pdf-btn').style.display = 'none';
-            document.getElementById('regresar-btn').style.display = 'none';
-        });
-
-        addEventListeners('#compra-btn', () => {
-            document.getElementById('compra-container').style.display = 'block';
-            document.getElementById('agregar-producto-container').style.display = 'none';
-            document.getElementById('ticket-container').style.display = 'none';
-            document.getElementById('guardar-pdf-btn').style.display = 'none';
-            document.getElementById('regresar-btn').style.display = 'none';
-            mostrarProductosDisponibles();
-        });
-
-        addEventListeners('#guardar-producto-btn', agregarProducto);
-        addEventListeners('#generar-ticket-btn', generarTicket);
-        addEventListeners('#guardar-pdf-btn', guardarTicketComoPDF);
-        addEventListeners('#regresar-btn', regresarCompra);
+        mostrarProductosDisponibles();
     </script>
 </body>
 </html>
