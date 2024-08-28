@@ -85,6 +85,9 @@
         <div id="whatsapp-container" style="display: none;">
             <button id="send-whatsapp" class="button">Enviar Ticket por WhatsApp</button>
         </div>
+        <div>
+            <button id="new-purchase" class="button" style="display: none;">Nueva Compra</button>
+        </div>
     </div>
 
     <script>
@@ -125,6 +128,7 @@
             ticketContainer.innerHTML += `<h3>Total: $${totalCompra.toFixed(2)}</h3>`;
             ticketContainer.style.display = 'block';
             document.getElementById('whatsapp-container').style.display = 'block';
+            document.getElementById('new-purchase').style.display = 'block';
         }
 
         document.getElementById('finish').addEventListener('click', mostrarTicket);
@@ -142,6 +146,14 @@
 
             const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${mensaje}`;
             window.open(urlWhatsApp, '_blank');
+        });
+
+        document.getElementById('new-purchase').addEventListener('click', function() {
+            ticket = [];
+            document.getElementById('product-form').reset();
+            document.getElementById('ticket-container').style.display = 'none';
+            document.getElementById('whatsapp-container').style.display = 'none';
+            document.getElementById('new-purchase').style.display = 'none';
         });
     </script>
 </body>
